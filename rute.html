@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+    <link rel="stylesheet" href="css/L.Control.Locate.min.css">
+    <link rel="stylesheet" href="css/qgis2web.css">
+    <link rel="stylesheet" href="css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/leaflet.photon.css">
+    <link rel="stylesheet" href="css/leaflet-measure.css">
+    <link rel="stylesheet" href="css/app.css">
+    <title>Info Rumah Sakit Pekanbaru - Rute</title>
+</head>
+<body data-page="route">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html" class="navbar-brand">
+                <div class="navbar-brand-icon"><i class="fas fa-hospital"></i></div>
+                <span>Hospital Finder</span>
+            </a>
+            <div class="navbar-menu">
+                <button class="navbar-link " data-page="home"  onclick="location.href='index.html'"><i class="fas fa-home" ></i> Utama</button>
+                <button class="navbar-link" data-page="map" onclick="location.href='peta.html'"></i> Peta</button>
+                <button class="navbar-link" data-page="route"  onclick="location.href='rute.html'"><i class="fas fa-route"></i> Rute</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="route-layout">
+            <div class="route-panel">
+                <div class="route-panel-header">
+                    <h2>Rute Perjalanan</h2>
+                    <p>Atur lokasi awal & tujuan, lalu pilih jenis rute yang diinginkan!</p>
+                </div>
+
+                <div class="route-type-toggle">
+                    <button class="route-type-btn active" id="route-fastest" data-type="fastest">
+                        <i class="fas fa-bolt"></i> Rute Tercepat
+                    </button>
+                    <button class="route-type-btn" id="route-shortest" data-type="shortest">
+                        <i class="fas fa-route"></i> Rute Normal (Terpendek)
+                    </button>
+                </div>
+
+                <div class="location-card">
+                    <div class="location-card-header">
+                        <div class="location-badge start">A</div>
+                        <div>
+                            <h4>Lokasi Awal</h4>
+                            <span>Titik keberangkatan Anda</span>
+                        </div>
+                    </div>
+                    <div class="location-input-group column">
+                        <input type="text" id="route-start-name" placeholder="Masukkan nama lokasi...">
+                    </div>
+                    <div class="location-input-group">
+                        <input type="text" id="route-start-lat" class="coord-input" placeholder="Latitude (misal: 0.5240)">
+                        <input type="text" id="route-start-lng" class="coord-input" placeholder="Longitude (misal: 101.4523)">
+                    </div>
+                    <div class="location-actions">
+                        <button class="action-btn primary" id="use-my-location"><i class="fas fa-crosshairs"></i> Lokasi Saya</button>
+                        <button class="action-btn" id="set-start-manual"><i class="fas fa-check"></i> Terapkan</button>
+                    </div>
+                </div>
+
+                <div class="location-card">
+                    <div class="location-card-header">
+                        <div class="location-badge end">B</div>
+                        <div>
+                            <h4>Lokasi Tujuan</h4>
+                            <span>Rumah sakit yang dituju</span>
+                        </div>
+                    </div>
+                    <div class="location-input-group column">
+                        <input type="text" id="route-end-name" placeholder="Pilih rumah sakit...">
+                    </div>
+                    <div class="location-input-group">
+                        <input type="text" id="route-end-lat" class="coord-input" placeholder="Latitude (misal: 0.4971)">
+                        <input type="text" id="route-end-lng" class="coord-input" placeholder="Longitude (misal: 101.4560)">
+                    </div>
+                    <div class="location-actions">
+                        <button class="action-btn primary" id="select-hospital"><i class="fas fa-hospital"></i> Pilih RS</button>
+                        <button class="action-btn" id="set-end-manual"><i class="fas fa-check"></i> Terapkan</button>
+                    </div>
+                </div>
+
+                <div class="main-actions">
+                    <button class="main-btn" id="calculate-route"><i class="fas fa-route"></i> Hitung & Tampilkan Rute</button>
+                    <button class="main-btn secondary" id="clear-route"><i class="fas fa-redo"></i> Reset Semua</button>
+                </div>
+
+                <div class="route-summary" id="route-summary" style="display:none;">
+                    <h3><i class="fas fa-map-marked-alt"></i> Ringkasan Rute</h3>
+                    <div class="route-stats">
+                        <div class="route-stat"><strong id="route-distance">-</strong><span>Jarak</span></div>
+                        <div class="route-stat"><strong id="route-duration">-</strong><span>Est. Waktu</span></div>
+                    </div>
+                    <h4 style="margin:0 0 12px; color:#cbd5e1; font-size:1rem;"><i class="fas fa-list-ul"></i> Petunjuk Arah</h4>
+                    <div class="route-directions" id="route-directions"></div>
+                </div>
+
+                <div class="guide-box">
+                    <h4><i class="fas fa-lightbulb"></i> Panduan Cepat</h4>
+                    <ul>
+                        <li><strong>Klik peta</strong> untuk menetapkan titik A & B secara langsung</li>
+                        <li><strong>Pilih RS</strong> untuk menentukan tujuan dengan cepat</li>
+                        <li><strong>Lokasi Saya</strong> untuk mendeteksi posisi Anda secara otomatis</li>
+                        <li><strong>Pilih jenis rute</strong> antara tercepat atau terpendek</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="route-map-container">
+                <div class="route-map-frame"><div id="route-map" class="route-map"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="hospital-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-hospital"></i> Pilih Rumah Sakit</h3>
+                <p>Cari dan pilih rumah sakit tujuan Anda</p>
+            </div>
+            <div class="modal-search">
+                <input type="text" id="modal-search" placeholder="Cari nama rumah sakit...">
+            </div>
+            <div class="modal-list" id="modal-list"></div>
+        </div>
+    </div>
+
+    <script src="js/qgis2web_expressions.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/L.Control.Layers.Tree.min.js"></script>
+    <script src="js/L.Control.Locate.min.js"></script>
+    <script src="js/leaflet.rotatedMarker.js"></script>
+    <script src="js/leaflet.pattern.js"></script>
+    <script src="js/leaflet-hash.js"></script>
+    <script src="js/Autolinker.min.js"></script>
+    <script src="js/rbush.min.js"></script>
+    <script src="js/labelgun.min.js"></script>
+    <script src="js/labels.js"></script>
+    <script src="js/leaflet.photon.js"></script>
+    <script src="js/leaflet-measure.js"></script>
+    <script src="data/Batas_Administrasi_Pekanbaru_1.js"></script>
+    <script src="data/Sebaran_Rumah_Sakit_2.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

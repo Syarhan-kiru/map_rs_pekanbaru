@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+    <link rel="stylesheet" href="css/L.Control.Locate.min.css">
+    <link rel="stylesheet" href="css/qgis2web.css">
+    <link rel="stylesheet" href="css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/leaflet.photon.css">
+    <link rel="stylesheet" href="css/leaflet-measure.css">
+    <link rel="stylesheet" href="css/app.css">
+    <title>Info Rumah Sakit Pekanbaru - Peta</title>
+</head>
+<body data-page="map">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html" class="navbar-brand">
+                <div class="navbar-brand-icon"><i class="fas fa-hospital"></i></div>
+                <span>Hospital Finder</span>
+            </a>
+            <div class="navbar-menu">
+                 <button class="navbar-link active" data-page="home"  onclick="location.href='index.html'"><i class="fas fa-home" ></i> Utama</button>
+                <button class="navbar-link" data-page="map" onclick="location.href='peta.html'"></i> Peta</button>
+                <button class="navbar-link" data-page="route"  onclick="location.href='rute.html'"><i class="fas fa-route"></i> Rute</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="full-map-container">
+            <div class="full-map-frame"><div id="full-map" class="full-map"></div></div>
+        </div>
+    </div>
+
+    <script src="js/qgis2web_expressions.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/L.Control.Layers.Tree.min.js"></script>
+    <script src="js/L.Control.Locate.min.js"></script>
+    <script src="js/leaflet.rotatedMarker.js"></script>
+    <script src="js/leaflet.pattern.js"></script>
+    <script src="js/leaflet-hash.js"></script>
+    <script src="js/Autolinker.min.js"></script>
+    <script src="js/rbush.min.js"></script>
+    <script src="js/labelgun.min.js"></script>
+    <script src="js/labels.js"></script>
+    <script src="js/leaflet.photon.js"></script>
+    <script src="js/leaflet-measure.js"></script>
+    <script src="data/Batas_Administrasi_Pekanbaru_1.js"></script>
+    <script src="data/Sebaran_Rumah_Sakit_2.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
